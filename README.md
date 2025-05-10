@@ -1,5 +1,10 @@
 # Kraken Futures Momentum Trading Bot
 
+![Python](https://img.shields.io/badge/python-3.11-blue)
+![Status](https://img.shields.io/badge/status-active-brightgreen)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+
 This is a command-line trading bot for Kraken Futures that uses a momentum and scalping strategy to trade perpetual futures contracts.
 
 ## 📈 Strategy Overview

@@ -1,32 +1,30 @@
 # bot.py
 import time
+from __version__ import __version__
+print(f"GPT Trading Bot v{__version__}")
+
 from exchange import KrakenFuturesAPI
 from strategy import detect_signals
 from simulator import Portfolio
-from config import SLEEP_DELAY, SIMULATION_MODE, STARTING_CAPITAL
+from config import SLEEP_DELAY, SIMULATION_MODE, STARTING_CAPITAL, MAX_POSITIONS
 
-# Initialize components
-api = KrakenFuturesAPI()
-portfolio = Portfolio(initial_cash=STARTING_CAPITAL)
-
-print("Starting trading bot... (Simulation Mode: {} | Initial Cash: ${})".format(SIMULATION_MODE, STARTING_CAPITAL))
-
-while True:
-    try:
+def tickers_loop(api, portfolio):
+    while True:
         tickers = api.fetch_tickers()
-        signals = detect_signals(tickers)
+        signals = detect_signals(tickers, limit=MAX_POSITIONS)
 
-        for symbol, signal in signals.items():
-            if SIMULATION_MODE:
-                portfolio.execute_trade(symbol, signal, tickers[symbol])
-            else:
-                api.place_order(symbol, signal)
+        for symbol, (direction, leverage) in signals.items():
+            portfolio.execute_trade(symbol, direction, tickers[symbol], leverage=leverage)
+        yield tickers
+        time.sleep(SLEEP_DELAY)
 
-        if SIMULATION_MODE:
-            portfolio.update_positions(tickers)
-            portfolio.log_status()
+# Initialize
+api = KrakenFuturesAPI()
+portfolio = Portfolio(initial_cash=STARTING_CAPITAL, max_open_positions=MAX_POSITIONS)
 
-    except Exception as e:
-        print("Error during execution:", e)
+print(f"Starting trading bot... (Simulation Mode: {SIMULATION_MODE} | Initial Cash: ${STARTING_CAPITAL})")
 
-    time.sleep(SLEEP_DELAY)
+if SIMULATION_MODE:
+    portfolio.run_with_ui(tickers_loop(api, portfolio))
+else:
+    print("Live mode not implemented yet.")
