@@ -1,0 +1,12 @@
+# config.py
+SLEEP_DELAY = 30  # seconds
+SIMULATION_MODE = True
+STARTING_CAPITAL = 10000
+
+# Strategy thresholds
+MOMENTUM_THRESHOLD = 7.0  # % gain over 24h
+MIN_VOLUME = 50000  # USD equivalent
+STOP_LOSS_PCT = 0.03
+TAKE_PROFIT_PCT = 0.07
+TRADING_FEE = 0.0005  # 0.05%
+FUNDING_RATE_ESTIMATE = 0.0002  # 0.02% per hour
