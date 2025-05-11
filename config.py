@@ -1,15 +1,21 @@
-# config.py
-SLEEP_DELAY = 5  # seconds
-SIMULATION_MODE = True
+# General trading settings
 STARTING_CAPITAL = 10000
-MAX_POSITIONS = 15
+SLEEP_DELAY = 3  # seconds between each tick
+MAX_POSITIONS = 20
 
-# Strategy thresholds
-MOMENTUM_THRESHOLD = 7.0  # % gain over 24h
-MIN_VOLUME = 50000  # USD equivalent
-STOP_LOSS_PCT = 0.03
-TAKE_PROFIT_PCT = 0.07
-TRADING_FEE = 0.0005  # 0.05%
-FUNDING_RATE_ESTIMATE = 0.0002  # 0.02% per hour
-FUNDING_RATE_SHORT = 0.001    # avoid shorting when it's too costly
-FUNDING_RATE_LONG = 0.001     # avoid longing when it's too crowded
+# Scalping and position management
+STOP_LOSS_PCT = 0.005      # 0.5%
+TAKE_PROFIT_PCT = 0.018    # 1.8%
+TRADING_FEE = 0.0006       # Round-trip fee estimate
+FUNDING_RATE_ESTIMATE = 0.0002  # Hourly estimate
+
+# Signal detection logic
+MOMENTUM_THRESHOLD = 7.0   # % 24h change
+MIN_VOLUME = STARTING_CAPITAL * 5         # USD
+FUNDING_RATE_SHORT = 0.001
+FUNDING_RATE_LONG = 0.001
+
+# Execution modes
+REAL_TRADING = False
+DRY_RUN = False
+DEBUG_NO_UI = False

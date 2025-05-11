@@ -1,20 +1,7 @@
-# strategy.py
 from config import MOMENTUM_THRESHOLD, MIN_VOLUME, FUNDING_RATE_SHORT, FUNDING_RATE_LONG
 
-# Example logic — conservative for volatile assets, higher for large caps
-def decide_leverage(symbol, data):
-    vol = float(data.get("volatility24h", 0))  # or derive from price range
-    funding = float(data.get("fundingRate", 0))
-
-    # Default conservative leverage
-    if "BTC" in symbol or "ETH" in symbol:
-        return 10 if vol > 5 else 20
-    elif funding > 0.01:
-        return 5  # lower leverage when funding is expensive
-    else:
-        return 15
-
-def detect_signals(tickers, limit=None):
+def detect_signals(tickers, limit=None, override_threshold=None):
+    threshold = override_threshold if override_threshold is not None else MOMENTUM_THRESHOLD
     candidates = []
 
     for symbol, data in tickers.items():
@@ -26,20 +13,29 @@ def detect_signals(tickers, limit=None):
             if volume < MIN_VOLUME:
                 continue
 
-            # Long signal
-            if change > MOMENTUM_THRESHOLD and funding < FUNDING_RATE_LONG:
-                candidates.append((symbol, "long", change))
+            # Determine trade type
+            scalp = abs(change) >= threshold
+            direction = None
 
-            # Short signal
-            elif change < -MOMENTUM_THRESHOLD and funding > FUNDING_RATE_SHORT:
-                candidates.append((symbol, "short", abs(change)))  # abs(change) for sorting
+            if change > 0 and funding < FUNDING_RATE_LONG:
+                direction = "long"
+            elif change < 0 and funding > FUNDING_RATE_SHORT:
+                direction = "short"
 
-        except Exception:
+            if direction:
+                candidates.append((symbol, direction, abs(change), scalp))
+        except:
             continue
 
-    # Sort strongest moves first
     candidates.sort(key=lambda x: -x[2])
     if limit:
         candidates = candidates[:limit]
 
-    return {symbol: (direction, decide_leverage(symbol, data)) for symbol, direction, _ in candidates}
+    return {
+        symbol: {
+            "direction": direction,
+            "leverage": 50 if scalp else 10,
+            "scalp": scalp
+        }
+        for symbol, direction, _, scalp in candidates
+    }

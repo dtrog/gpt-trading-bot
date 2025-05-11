@@ -73,6 +73,20 @@ python bot.py
 - `requirements.txt`: Python libraries
 - `trading-bot-setup.sh`: Full setup script
 
----
+### New Features (v0.3.0)
+
+* **Session Timer**: Displays elapsed time (HH\:MM\:SS) since bot start.
+* **Separate PnL Breakdown**: Shows open profit/loss totals for scalping vs. swing positions.
+* **Position Duration**: Each open position row now includes duration in HH\:MM\:SS format.
+* **Interactive Quit Summary**: Press `q` once to show session summary (forced exit for open positions, stats), and `q` again to exit.
+* **Slash Display for SL/TS**: When stop-loss or trailing stops are inactive, columns show `/` placeholder.
+
+### How to Use
+
+1. **Run**: `python bot.py` (simulation mode).
+2. **Reload Settings**: Press `r` to reload `settings.json` on the fly.
+3. **Quit**: Press `q` once to view final session report, then `q` again to exit.
+4. **Logs**: All trades and errors written to `simulation.log`.
+
 
 This project is for educational use. Trading involves risk. Use responsibly.

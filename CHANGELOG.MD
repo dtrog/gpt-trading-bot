@@ -21,3 +21,21 @@
 ### Fixed
 - Prevented crashes due to missing tickers or zero prices
 - Improved spacing/alignment in curses terminal output
+
+## [0.3.0] - 2025-05-11
+
+### Added
+- Session timer showing runtime.
+- Scalping vs. swing open PnL breakdown in header.
+- Per-position duration (HH:MM:SS) column.
+- Interactive `q`-quit flow: summary and forced exit handling.
+- Slash placeholders for inactive SL/TS columns.
+
+### Fixed
+- UI column alignment across all displays.
+- Syntax errors in trailing stop activation logic.
+- Logging enhanced for UI loop exceptions.
+
+### Changed
+- Adaptive scaling variables moved to `settings.json`.
+- Merged SL/TP logic with breakeven and trailing activation.
